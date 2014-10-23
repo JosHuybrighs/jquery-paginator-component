@@ -1,12 +1,12 @@
 {
-	"name": "paginator-component",
+	"name": "jquery.services.paginator",
 	"version": "1.0.0",
 	"title": "jQuery paginator component",
 	"description": "A jQuery plugin that acts as paginator element. It provides the usual pagination controls for handling server-side pagination. In contrast with some other pagination controls it however doesn't take care of the actual loading of page content. That is assumed to be the responsibility of something outside of the paginator. The plugin of course provides customizable (UI) 'previous', 'next' and 'page' links.",
-	"homepage": "http://swcomponents.cwwonline.be",
+	"homepage": "http://code.cwwonline.be",
 	"author": {
 		"name": "Jos Huybrighs",
-		"url": "http://swcomponents.cwwonline.be"
+		"url": "http://code.cwwonline.be"
 	},
 	"licenses": [{
 		"type": "MIT",

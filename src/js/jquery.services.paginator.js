@@ -2,18 +2,18 @@
  * A jquery plugin implementing a paginator. 
  * Usage:
  *  - Instantiation:
- *      $('#paginator').paginatorcomponent({ itemsCount: count,
- *                                           activePageIdx: index,
- *                                           maxPagesShown: count,
- *                                           itemsPerPage: count,
- *                                           onPageRequest: function (el, pageIdx) { ... },
- *                                           onNextClick: function (el, newPageIdx) { ... },
- *                                           onPrevClick: function (el, newPageIdx) { ... }
+ *      $('#paginator').paginator({ itemsCount: count,
+ *                                  activePageIdx: index,
+ *                                  maxPagesShown: count,
+ *                                  itemsPerPage: count,
+ *                                  onPageRequest: function (el, pageIdx) { ... },
+ *                                  onNextClick: function (el, newPageIdx) { ... },
+ *                                  onPrevClick: function (el, newPageIdx) { ... }
  *      });
- *  - ReInitialization:
- *      $('#paginator').paginatorcomponent('reInit', { itemsCount: count,
- *                                                     activePageIdx: index,
- *                                                     etc. (see instantiation) 
+ *  - External methods:
+ *      $('#paginator').paginator('reInit', { itemsCount: count,
+ *                                            activePageIdx: index,
+ *                                            etc. (see instantiation) 
  *      });
  *
  * version 1.0.0
@@ -23,18 +23,19 @@
  * Copyright (c) Jos Huybrighs
  * swcomponents.cwwonline.be
  *
- * Dual licensed under the MIT and GPL licenses.
+ * Licensed under the MIT license.
  * http://en.wikipedia.org/wiki/MIT_License
  *
  ******************************************************************************************************/
 ; (function ($, window, document, undefined) {
 
-    var pluginName = "paginatorcomponent";
+    var pluginName = "paginator";
     var defaults = {
         itemsCount: 0,
         activePageIdx: 0,
         maxPagesShown: 5,
         itemsPerPage: 5,
+        allowKeyNavigation: true,
         onPageRequest: function (el, pageIdx) { },
         onNextClick: function (el, newPageIdx) { },
         onPrevClick: function (el, newPageIdx) { }
@@ -51,74 +52,82 @@
     Plugin.prototype = {
 
         _init: function () {
-            //            console.log(pluginName + ': _init');
             this.next = false;
             this.prev = false;
             this.currentPageIdx = 0;
-            this.maxPage = (this.settings.itemsCount != 0) ? Math.floor((this.settings.itemsCount - 1) / this.settings.itemsPerPage) + 1 : 0;
-            this.leftIdx = 0;
-            this.rightIdx = this.maxPage - 1;
-            if (this.maxPage > 1) {
-                this.next = true;
-                // Setup html elements
-                $(this.element).addClass('paginatorComp');
-                if (this.settings.itemsCount != 0) {
-                    // Setup pager anchors
-                    this.prevAnchor = $('<a href="#" class="pcPrev">&lt;</a>');
-                    this.prevAnchor.hide();
-                    var self = this;
-                    $(this.element).append(this.prevAnchor);
-                    this.itemAnchors = new Array;
-                    this.anchorCurrent = this.itemAnchors[0] = $('<a href="#" class="pcCurrent">1</a>');
-                    $(this.element).append(this.itemAnchors[0]);
-                    this.firstBreak = $('<span class="pcBreak">.&nbsp;.&nbsp;.</span>');
-                    this.firstBreak.hide();
-                    $(this.element).append(this.firstBreak);
-                    for (i = 2; i < this.maxPage; i++) {
-                        var anchor = $('<a href="#" class="pcSel">' + i + '</a>');
-                        $(this.element).append(anchor);
-                        if (this.maxPage > this.settings.maxPagesShown &&
-                            i >= this.settings.maxPagesShown) {
-                            anchor.hide();
+            if (this.settings.itemsPerPage > 0) {
+                this.maxPage = (this.settings.itemsCount != 0) ? Math.floor((this.settings.itemsCount - 1) / this.settings.itemsPerPage) + 1 : 0;
+                this.leftIdx = 0;
+                this.rightIdx = this.maxPage - 1;
+                if (this.maxPage > 1) {
+                    this.next = true;
+                    // Setup html elements
+                    $(this.element).addClass('paginatorComp');
+                    if (this.settings.itemsCount != 0) {
+                        // Setup pager anchors
+                        this.prevAnchor = $('<a href="#" class="pcPrev">&lt;</a>');
+                        this.prevAnchor.hide();
+                        var self = this;
+                        $(this.element).append(this.prevAnchor);
+                        this.itemAnchors = new Array;
+                        this.anchorCurrent = this.itemAnchors[0] = $('<a href="#" class="pcCurrent">1</a>');
+                        $(this.element).append(this.itemAnchors[0]);
+                        this.firstBreak = $('<span class="pcBreak">.&nbsp;.&nbsp;.</span>');
+                        this.firstBreak.hide();
+                        $(this.element).append(this.firstBreak);
+                        for (i = 2; i < this.maxPage; i++) {
+                            var anchor = $('<a href="#" class="pcSel">' + i + '</a>');
+                            $(this.element).append(anchor);
+                            if (this.maxPage > this.settings.maxPagesShown &&
+                                i >= this.settings.maxPagesShown) {
+                                anchor.hide();
+                            }
+                            this.itemAnchors[i - 1] = anchor;
                         }
-                        this.itemAnchors[i - 1] = anchor;
-                    }
-                    if (this.maxPage > 1) {
-                        this.lastBreak = $('<span class="pcBreak">.&nbsp;.&nbsp;.</span>');
-                        if (this.maxPage <= this.settings.maxPagesShown) {
-                            this.lastBreak.hide();
+                        if (this.maxPage > 1) {
+                            this.lastBreak = $('<span class="pcBreak">.&nbsp;.&nbsp;.</span>');
+                            if (this.maxPage <= this.settings.maxPagesShown) {
+                                this.lastBreak.hide();
+                            }
+                            else {
+                                this.rightIdx = this.settings.maxPagesShown - 2;
+                            }
+                            $(this.element).append(this.lastBreak);
+                            this.itemAnchors[this.maxPage - 1] = $('<a href="#" class="pcSel">' + this.maxPage + '</a>');
+                            $(this.element).append(this.itemAnchors[this.maxPage - 1]);
                         }
-                        else {
-                            this.rightIdx = this.settings.maxPagesShown - 2;
+                        this.nextAnchor = $('<a href="#" class="pcNext">&gt;</a>');
+                        $(this.element).append(this.nextAnchor);
+                        if (!this.next) {
+                            this.nextAnchor.hide();
                         }
-                        $(this.element).append(this.lastBreak);
-                        this.itemAnchors[this.maxPage - 1] = $('<a href="#" class="pcSel">' + this.maxPage + '</a>');
-                        $(this.element).append(this.itemAnchors[this.maxPage - 1]);
-                    }
-                    this.nextAnchor = $('<a href="#" class="pcNext">&gt;</a>');
-                    $(this.element).append(this.nextAnchor);
-                    if (!this.next) {
-                        this.nextAnchor.hide();
-                    }
-                    // Setup touch/click handlers
-                    this.prevAnchor.on('touchstart touchmove touchend click', function (event) {
-                        event.preventDefault();
-                        self._previous();
-                    });
-                    this.nextAnchor.on('touchstart touchmove touchend click', function (event) {
-                        event.preventDefault();
-                        self._next();
-                    });
-                    for (var i = 0; i < this.maxPage; i++) {
-                        this.itemAnchors[i].on('touchstart touchmove touchend click', { pageIdx: i }, function (event) {
-                            event.preventDefault();
-                            self._selPage(event.data.pageIdx);
-                            self.settings.onPageRequest(self, self.currentPageIdx);
+                        // Setup touch and key navigation handlers
+                        this.prevAnchor.ontouchclick(function (event) {
+                            self._previous();
                         });
+                        this.nextAnchor.ontouchclick(function (event) {
+                            self._next();
+                        });
+                        if (self.settings.allowKeyNavigation) {
+                            $('body').on('keyup.paginator', function (e) {
+                                if (e.keyCode === 39) {
+                                    self._next();
+                                }
+                                else if (e.keyCode === 37) {
+                                    self._previous();
+                                }
+                            });
+                        }
+                        for (var i = 0; i < this.maxPage; i++) {
+                            this.itemAnchors[i].ontouchclick({ pageIdx: i }, function (event) {
+                                self._selPage(event.data.pageIdx);
+                                self.settings.onPageRequest(self, self.currentPageIdx);
+                            });
+                        }
                     }
+                    // Select configured page (if not 0)
+                    this._selPage(this.settings.activePageIdx);
                 }
-                // Select configured page (if not 0)
-                this._selPage(this.settings.activePageIdx);
             }
         },
 
@@ -231,13 +240,21 @@
                 }
                 this.anchorCurrent.removeClass('pcCurrent').addClass('pcSel');
                 this.anchorCurrent = this.itemAnchors[pageIdx];
+                if (this.anchorCurrent == undefined) {
+                    alert('undefined');
+                }
                 this.anchorCurrent.removeClass('pcSel').addClass('pcCurrent');
                 if (this.currentPageIdx > pageIdx) {
-                    this.currentPageIdx = pageIdx;
-                    this._addPageLeft();
+                    while (this.currentPageIdx != pageIdx) {
+                        this.currentPageIdx--;
+                        this._addPageLeft();
+                    }
                 }
                 else {
-                    this.currentPageIdx = pageIdx;
+                    while (this.currentPageIdx != pageIdx) {
+                        this.currentPageIdx++;
+                        this._addPageRight();
+                    }
                     this._addPageRight();
                 }
             }
@@ -250,6 +267,9 @@
         reInit: function (argsArray) {
             $(this.element).removeClass('paginatorComp');
             $(this.element).empty();
+            if (this.settings.allowKeyNavigation) {
+                $('body').off('.paginator');
+            }
             $.extend(this.settings, argsArray[0]);
             this._init();
         }
