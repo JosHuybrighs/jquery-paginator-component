@@ -1,4 +1,6 @@
-###jquery-services-paginator
+###service-paginator.jquery
+
+##Description
 
 A jquery plugin providing the services of a standalone pagination control component.
 
@@ -9,6 +11,6 @@ javascript component (e.g. jquery-services-itemslist) that loads page content fr
 
 The plugin of course provides customizable (UI) 'previous', 'next' and 'page' links.
 
-## Demo and Documentation
+##Tutorial, demo and documentation
 
 You can find the tutorial, demo and API description at [code.cwwonline.be](http://code.cwwonline.be/jqueryservicespaginator).

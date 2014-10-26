@@ -1,0 +1,76 @@
+.paginatorComp {
+  position: relative;
+  clear: both;
+  height: 40px;
+  text-align: center;
+  overflow: hidden;
+}
+.paginatorComp a,
+.paginatorComp .pcBreak {
+  display: inline-block;
+  height: 100%;
+  min-width: 30px;
+  text-align: center;
+  font-size: 1.0em;
+  line-height: 2.3em;
+  color: #303030;
+  font-family: 'Ubuntu';
+  -webkit-transition: all .25s ease-out;
+  transition: all .25s ease-out;
+}
+.paginatorComp .pcPrev,
+.paginatorComp .pcNext {
+  position: absolute;
+  top: 0;
+  width: 30px;
+  font-size: 1.3em;
+  line-height: 1.6em;
+  font-weight: bold;
+  color: #ffffff; 
+  background-color: #494949;
+}
+.paginatorComp .pcPrev {
+  left: 0;
+}
+.paginatorComp .pcNext {
+  right: 0;
+}
+.paginatorComp .pcPrev:hover,
+.paginatorComp .pcNext:hover,
+.paginatorComp .pcPrev.touchStart,
+.paginatorComp .pcNext.touchStart {
+  background-color: #497981;
+}
+.paginatorComp .pcSel:hover,
+.paginatorComp .pcSel.touchStart {
+  color: #151515;
+  font-weight: bold;
+}
+.paginatorComp .pcCurrent {
+  color: #151515;
+  font-weight: bold;
+  cursor: default;
+  text-decoration: none;
+}
+
+/* Small screens: e.g. mobiles */
+@media only screen {
+}
+
+/* Bigger screens */
+@media only screen and (min-width: 40.063em) {
+  .paginatorComp {
+    height: 60px;
+  }
+  .paginatorComp a,
+  .paginatorComp .pcBreak {
+    font-size: 1.2em;
+    line-height: 2.8em;
+  }
+  .paginatorComp .pcPrev,
+  .paginatorComp .pcNext {
+    width: 60px;
+    font-size: 1.5em;
+    line-height: 2.3em;
+  }
+}
