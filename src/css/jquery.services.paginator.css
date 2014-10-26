@@ -27,8 +27,7 @@
   line-height: 1.6em;
   font-weight: bold;
   color: #ffffff; 
-  background-color: #444444;
-  background-color: #007589;
+  background-color: #494949;
 }
 .paginatorComp .pcPrev {
   left: 0;
@@ -40,9 +39,7 @@
 .paginatorComp .pcNext:hover,
 .paginatorComp .pcPrev.touchStart,
 .paginatorComp .pcNext.touchStart {
-  background-color: #666666;
-  background-color: #008751;
-  background-color: #008198;
+  background-color: #497981;
 }
 .paginatorComp .pcSel:hover,
 .paginatorComp .pcSel.touchStart {
