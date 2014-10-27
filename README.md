@@ -13,4 +13,4 @@ The plugin of course provides customizable (UI) 'previous', 'next' and 'page' li
 
 ##Tutorial, demo and documentation
 
-You can find the tutorial, demo and API description at [code.cwwonline.be](http://code.cwwonline.be/jqueryservicespaginator).
+You can find the tutorial, demo and API description at [code.cwwonline.be](http://code.cwwonline.be/servicepaginatorjquery).
