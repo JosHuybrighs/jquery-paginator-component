@@ -1,4 +1,4 @@
-###service.paginator.jquery
+###service.paginator.jquery - Pagination component
 
 ##Description
 
