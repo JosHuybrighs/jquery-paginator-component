@@ -28,7 +28,7 @@
  *
  ******************************************************************************************************/
 ; (function ($, window, document, undefined) {
-
+    var version = '1.0.0';
     var pluginName = "paginator";
     var defaults = {
         itemsCount: 0,
